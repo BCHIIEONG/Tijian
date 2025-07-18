@@ -2,7 +2,7 @@
   <!-- 总容器 -->
   <div class="wrapper">
     <header>
-      <i class="fa fa-angle-left" onclick="history.go(-1)"></i>
+      <i class="fa fa-angle-left" @click="goBack"></i>
       <p>选择体检日期</p>
       <div></div>
     </header>
@@ -61,6 +61,8 @@
 import { reactive, toRefs } from "vue";
 import axios from "axios";
 import { useRouter, useRoute } from "vue-router";
+import Footer from "@/components/Footer.vue";
+
 export default {
   setup() {
     const router = useRouter();
@@ -94,10 +96,24 @@ export default {
            }
 
            //为了方便控制样式，再给每个日历加多一个属性selected  选中为1  未选中为0
+          let firstAvailableIndex = -1;
           for (let y = 0; y < state.calendarArr.length; y++) {
             if (state.calendarArr[y].ymd != null) {
               state.calendarArr[y].isSelected = 0;  //默认没有选中
+              
+              // 找到第一个可选日期的索引
+              if (firstAvailableIndex === -1 && 
+                  state.calendarArr[y].remainder != null && 
+                  state.calendarArr[y].remainder != 0) {
+                firstAvailableIndex = y;
+              }
             }
+          }
+          
+          // 自动选中第一个可选日期
+          if (firstAvailableIndex !== -1) {
+            state.calendarArr[firstAvailableIndex].isSelected = 1;
+            state.selectedDay = state.calendarArr[firstAvailableIndex].ymd;
           }
         })
         .catch(function (error) {
@@ -142,6 +158,10 @@ export default {
         state.calendarArr[index].isSelected=1;
     }
     
+    function goBack() {
+        router.go(-1);
+    }
+    
     function toConfirmOrder(){
         if(state.selectedDay==""){
             alert("请先选中体检日期");
@@ -157,9 +177,13 @@ export default {
         subtractMonth,
         addMonth,
         selected,
+        goBack,
         toConfirmOrder
 
     }
+  },
+  components: {
+    Footer,
   },
 };
 </script>

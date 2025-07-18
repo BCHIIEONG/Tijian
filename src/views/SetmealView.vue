@@ -2,7 +2,7 @@
   <!-- 总容器 -->
   <div class="wrapper">
     <header>
-      <i class="fa fa-angle-left" onclick="history.go(-1)"></i>
+      <i class="fa fa-angle-left" @click="goBack"></i>
       <p>选择体检套餐</p>
       <div></div>
     </header>
@@ -48,6 +48,8 @@
 import { reactive, toRefs } from "vue";
 import axios from "axios";
 import {useRouter,useRoute} from 'vue-router';
+import Footer from "@/components/Footer.vue";
+
 export default {
   setup() {
 
@@ -84,6 +86,10 @@ export default {
       state.setmealArr[index].isShow=!state.setmealArr[index].isShow;
     }
 
+    function goBack() {
+        router.go(-1);
+    }
+
     function toSelectDate(smId){
         //console.log("hpId:"+state.hpId+",smId:"+smId);
         //跳转到选择体检日期界面
@@ -96,8 +102,12 @@ export default {
       ...toRefs(state),
       initSetmealArr,
       show,
+      goBack,
       toSelectDate
     };
+  },
+  components: {
+    Footer,
   },
 };
 </script>
