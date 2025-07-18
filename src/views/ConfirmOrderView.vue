@@ -139,43 +139,29 @@ export default {
 
     function confirmPay(){
         //1.保存订单数据
-      /**   axios
-        .post("/api/saveOrders", {
-          hpId:state.hpId,
-          smId:state.smId,
-          userId:state.users.userId,
-          orderDate:state.selectedDay,
-          state:1
-        }) 
-        .then((response) => {
-            alert(response.data.desc);
-            
-        })
-        .catch(function (error) {
-          // 请求失败处理
-          console.log(error);
-        });
-
-        */
-       axios
+        axios
         .post("/api/saveOrders",{
           hpId:state.hpId,
           smId:state.smId,
           userId:state.users.userId,
           orderDate:state.selectedDay,
           state:1
-        }) //  localhost:8080/login/userId=?&password=?
+        })
         .then((response) => {
-         alert("success");
+          console.log(response.data);
+          if (response.data.code === 1) {
+            // 订单保存成功，调用支付宝支付
+            const orderId = response.data.data.orderId;
+            const paymentUrl = `/api/alipay/pay?subject=${encodeURIComponent(state.setmeal.name)}&traceNo=${orderId}&totalAmount=${state.setmeal.price}`;
+            window.open(paymentUrl, "_self");
+          } else {
+            alert(response.data.desc || "订单创建失败");
+          }
         })
         .catch(function (error) {
-          // 请求失败处理
           console.log(error);
+          alert("订单创建失败");
         });
-
-
-        //2.跳转到支付成功界面
-        //router.push()
     }
 
     return {

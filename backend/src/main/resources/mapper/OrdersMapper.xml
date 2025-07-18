@@ -22,10 +22,10 @@
     delete from orders
     where orderId = #{orderId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.jida.tijian.domain.Orders" >
-    insert into orders (orderId, orderDate, userId, 
+  <insert id="insert" parameterType="com.jida.tijian.domain.Orders" useGeneratedKeys="true" keyProperty="orderId">
+    insert into orders (orderDate, userId, 
       hpId, smId, state)
-    values (#{orderId,jdbcType=INTEGER}, #{orderDate,jdbcType=DATE}, #{userId,jdbcType=VARCHAR}, 
+    values (#{orderDate,jdbcType=DATE}, #{userId,jdbcType=VARCHAR}, 
       #{hpId,jdbcType=INTEGER}, #{smId,jdbcType=INTEGER}, #{state,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.jida.tijian.domain.Orders" >

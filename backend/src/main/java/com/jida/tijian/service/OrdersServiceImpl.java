@@ -15,7 +15,11 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     public ResponseObject saveOrders(Orders orders){
-        ordersMapper.insert(orders);
-        return new ResponseObject(ResponseObject.SUCCESS_STATUS,ResponseObject.SUCCESS_DESC);
+        try {
+            ordersMapper.insert(orders);
+            return new ResponseObject(ResponseObject.SUCCESS_STATUS, ResponseObject.SUCCESS_DESC, orders);
+        } catch (Exception e) {
+            return new ResponseObject(500, "订单保存失败", null);
+        }
     }
 }

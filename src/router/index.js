@@ -7,6 +7,7 @@ import SetmealView from '@/views/SetmealView.vue'
 import SelectDateView from '@/views/SelectDateView.vue'
 import ConfirmOrderView from '@/views/ConfirmOrderView.vue'
 import Personal from '@/views/Personal.vue'
+import AppointmentSuccessView from '@/views/AppointmentSuccessView.vue'
 
 
 const router = createRouter({
@@ -46,6 +47,10 @@ const router = createRouter({
       path:'/personal',
       name:'personal',
       component:Personal
+    },{
+      path:'/appointmentsuccess',
+      name:'appointmentsuccess',
+      component:AppointmentSuccessView
     }
   ],
 })
