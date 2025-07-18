@@ -1,50 +1,36 @@
 <template>
   <div class="wrapper">
     <header>
-      <i class="fa fa-home" @click="goHome"></i>
+      <i class="fa fa-angle-left" @click="goBack"></i>
       <p>预约成功</p>
       <div></div>
     </header>
     <div class="top-ban"></div>
 
     <section>
-      <div class="success-icon">
-        <i class="fa fa-check-circle"></i>
-      </div>
-      <div class="success-message">
-        <h2>支付成功!</h2>
-        <p>您的体检预约已成功完成</p>
+      <div class="success">
+        <div class="icon-box">
+          <div class="icon">
+            <i class="fa fa-check"></i>
+          </div>
+        </div>
+        <h1>恭喜预约成功！</h1>
+        <p v-if="orderInfo.setmealName">{{ orderInfo.setmealName }}</p>
+        <p v-else>请体检用户携带本人身份证到店认证</p>
       </div>
       
-      <div class="order-info">
-        <h3>预约信息</h3>
-        <div class="info-item">
-          <span class="label">预约时间:</span>
-          <span class="value">{{ orderInfo.date || '请查看预约详情' }}</span>
-        </div>
-        <div class="info-item">
-          <span class="label">预约状态:</span>
-          <span class="value success">已支付</span>
-        </div>
-      </div>
-
-      <div class="tips">
-        <h3>温馨提示</h3>
-        <ul>
-          <li>请按时到达体检机构</li>
-          <li>体检前请空腹8-12小时</li>
-          <li>如需取消或修改预约，请及时联系客服</li>
-          <li>体检完成后，报告将在3-5个工作日内生成</li>
-        </ul>
+      <div class="order-btn" @click="viewOrders">查看订单</div>
+      <div class="continue" @click="continueBooking">继续为家人预约</div>
+      
+      <div class="info">
+        <p v-if="orderInfo.date">预约时间：{{ orderInfo.date }}</p>
+        <p v-if="orderInfo.hospitalName">体检机构：{{ orderInfo.hospitalName }}</p>
+        <p v-if="orderInfo.price">支付金额：￥{{ orderInfo.price }}</p>
+        <p>您的信息已经发送至体检机构</p>
+        <p>预约成功后会发送短信至您的手机</p>
+        <p>客服电话<span>4008-XXX-XXX</span></p>
       </div>
     </section>
-
-    <div class="bottom-btn">
-      <div class="btn-group">
-        <button class="btn-secondary" @click="goHome">返回首页</button>
-        <button class="btn-primary" @click="viewOrders">查看预约</button>
-      </div>
-    </div>
 
     <div class="bottom-ban"></div>
     <Footer></Footer>
@@ -66,53 +52,95 @@ export default {
     
     const state = reactive({
       orderInfo: {
+        orderId: null,
+        setmealName: null,
+        price: null,
         date: null,
+        hospitalName: null,
         status: 'paid'
       }
     });
 
     onMounted(() => {
-      // 可以从路由参数或本地存储获取预约信息
-      const selectedDay = sessionStorage.getItem('selectedDay');
-      if (selectedDay) {
-        state.orderInfo.date = selectedDay;
+      // 从sessionStorage获取预约信息
+      const appointmentInfo = sessionStorage.getItem('appointmentInfo');
+      if (appointmentInfo) {
+        const info = JSON.parse(appointmentInfo);
+        state.orderInfo = {
+          ...state.orderInfo,
+          ...info
+        };
+        
+        // 保存预约记录到预约列表
+        saveAppointmentToList(state.orderInfo);
       }
     });
 
+    function saveAppointmentToList(orderInfo) {
+      // 获取当前预约列表
+      const existingAppointments = JSON.parse(sessionStorage.getItem('appointmentList') || '[]');
+      
+      // 创建新的预约记录
+      const newAppointment = {
+        orderId: Date.now(), // 简单的ID生成
+        orderDate: new Date().toISOString(),
+        setmealName: orderInfo.setmealName || '基础体检套餐',
+        price: orderInfo.price || 299,
+        state: 1, // 1: 待体检, 2: 已完成, 3: 已取消
+        hospitalName: orderInfo.hospitalName || '第一人民医院',
+        userId: JSON.parse(sessionStorage.getItem("jinandaxueuser") || "{}").userId
+      };
+      
+      // 添加新预约到列表
+      existingAppointments.push(newAppointment);
+      
+      // 保存到sessionStorage
+      sessionStorage.setItem('appointmentList', JSON.stringify(existingAppointments));
+    }
+
+    function goBack() {
+      router.go(-1);
+    }
+
     function goHome() {
-      router.push('/');
+      router.push('/index');
     }
 
     function viewOrders() {
       router.push('/personal');
     }
 
+    function continueBooking() {
+      router.push('/appointment');
+    }
+
     return {
       ...toRefs(state),
+      goBack,
       goHome,
-      viewOrders
+      viewOrders,
+      continueBooking
     };
   },
 };
 </script>
 
 <style scoped>
+/*********************** 总容器 ***********************/
 .wrapper {
   width: 100%;
-  height: 100vh;
-  background-color: #f9f9f9;
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  background-color: #F9F9F9;
 }
 
+/*********************** header ***********************/
 header {
   width: 100%;
   height: 15.7vw;
-  background-color: #fff;
+  background-color: #FFF;
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -130,6 +158,7 @@ header p {
   font-weight: 600;
 }
 
+/*********************** common样式 ***********************/
 .top-ban {
   width: 100%;
   height: 15.7vw;
@@ -137,165 +166,99 @@ header p {
 
 .bottom-ban {
   width: 100%;
-  height: 20vw;
+  height: 14.2vw;
 }
 
+/*********************** section ***********************/
 section {
-  flex: 1;
-  width: 86vw;
-  margin: 0 auto;
-  padding: 8vw 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.success-icon {
-  margin-bottom: 6vw;
-}
-
-.success-icon .fa-check-circle {
-  font-size: 20vw;
-  color: #52c41a;
-}
-
-.success-message {
-  text-align: center;
-  margin-bottom: 8vw;
-}
-
-.success-message h2 {
-  font-size: 6vw;
-  color: #333;
-  margin-bottom: 2vw;
-}
-
-.success-message p {
-  font-size: 4vw;
-  color: #666;
-}
-
-.order-info {
   width: 100%;
-  background-color: #fff;
-  border-radius: 2vw;
-  padding: 6vw;
-  margin-bottom: 6vw;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.order-info h3 {
-  font-size: 4.5vw;
-  color: #333;
-  margin-bottom: 4vw;
-  padding-bottom: 2vw;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.info-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 3vw 0;
-  border-bottom: 1px solid #f5f5f5;
-}
-
-.info-item:last-child {
-  border-bottom: none;
-}
-
-.info-item .label {
-  font-size: 3.8vw;
-  color: #666;
-}
-
-.info-item .value {
-  font-size: 3.8vw;
-  color: #333;
-}
-
-.info-item .value.success {
-  color: #52c41a;
-  font-weight: 600;
-}
-
-.tips {
+section .success {
   width: 100%;
-  background-color: #fff;
-  border-radius: 2vw;
-  padding: 6vw;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 62vw;
+  border-bottom: solid 1px #EEE;
+  background-color: #FFF;
 }
 
-.tips h3 {
-  font-size: 4.5vw;
-  color: #333;
-  margin-bottom: 4vw;
-  padding-bottom: 2vw;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.tips ul {
-  list-style: none;
-  padding: 0;
-}
-
-.tips li {
-  font-size: 3.6vw;
-  color: #666;
-  padding: 2vw 0;
+section .success .icon-box {
+  width: 100%;
+  height: 30vw;
+  background-image: linear-gradient(135deg, #01C7A4, #02A6C9, #02A6C9);
   position: relative;
-  padding-left: 4vw;
 }
 
-.tips li:before {
-  content: "•";
-  color: #127a90;
+section .success .icon-box .icon {
+  width: 16vw;
+  height: 16vw;
+  border-radius: 8vw;
+  background-color: #FFF;
   position: absolute;
-  left: 0;
+  left: 42vw;
+  bottom: -8vw;
+  font-size: 8vw;
+  color: #02A6C9;
+  text-align: center;
+  line-height: 16vw;
 }
 
-.bottom-btn {
+section .success h1 {
+  text-align: center;
+  font-size: 5.2vw;
+  font-weight: 500;
+  color: #02A6C9;
+  margin-top: 10vw;
+}
+
+section .success p {
+  text-align: center;
+  font-size: 3.4vw;
+  color: #555;
+  margin-top: 3vw;
+}
+
+section .order-btn {
   width: 100%;
-  background-color: #fff;
-  position: fixed;
-  left: 0;
-  bottom: 14.2vw;
-  padding: 4vw;
-  box-sizing: border-box;
-}
-
-.btn-group {
-  display: flex;
-  gap: 4vw;
-}
-
-.btn-secondary,
-.btn-primary {
-  flex: 1;
-  height: 12vw;
-  border: none;
-  border-radius: 6vw;
-  font-size: 4.2vw;
+  height: 14vw;
+  text-align: center;
+  line-height: 14vw;
+  font-size: 4vw;
+  color: #02A6C9;
+  background-color: #FFF;
+  user-select: none;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.btn-secondary {
-  background-color: #f5f5f5;
-  color: #666;
+section .continue {
+  width: 88vw;
+  height: 13vw;
+  margin: 0 auto;
+  background-image: linear-gradient(135deg, #01C7A4, #02A6C9, #02A6C9);
+  border-radius: 1vw;
+  text-align: center;
+  line-height: 13vw;
+  margin-top: 5vw;
+  font-size: 4vw;
+  color: #FFF;
+  user-select: none;
+  cursor: pointer;
 }
 
-.btn-secondary:hover {
-  background-color: #e8e8e8;
+section .info {
+  width: 100%;
+  margin-top: 16vw;
 }
 
-.btn-primary {
-  background-color: #117c94;
-  color: #fff;
+section .info p {
+  text-align: center;
+  font-size: 3.2vw;
+  color: #999;
+  margin-top: 1vw;
 }
 
-.btn-primary:hover {
-  background-color: #0f6b85;
+section .info p span {
+  font-size: 3.6vw;
+  color: #555;
+  margin-left: 1vw;
 }
 </style>

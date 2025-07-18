@@ -5,7 +5,7 @@
     <section>
       <div class="input-box">
         <i class="fa fa-user-o"></i>
-        <input type="text" placeholder="输入手机号" v-model="users.userId" />
+        <input type="text" placeholder="输入手机号" v-model="users.userId" @keyup.enter="login" />
       </div>
       <div class="input-box">
         <i class="fa fa-lock"></i>
@@ -13,10 +13,11 @@
           type="password"
           placeholder="输入登录密码"
           v-model="users.password"
+          @keyup.enter="login"
         />
       </div>
       <div class="reg-box">
-        <p @click="register">注册</p>
+        <p @click="goToRegister">注册</p>
         <p>忘记密码？</p>
       </div>
       <div class="button-box" @click="login">登录</div>
@@ -98,10 +99,16 @@ export default {
       console.log("you click register..............." + state.users.password);
     }
 
+    //跳转注册页面
+    function goToRegister() {
+      router.push('/register');
+    }
+
     return {
       ...toRefs(state),
       login,
       register,
+      goToRegister,
     };
   },
 };
@@ -110,10 +117,18 @@ export default {
 <style scoped>
 /*********************** 总容器 ***********************/
 .wrapper {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
   background-image: linear-gradient(45deg, #266c9f, #266c9f, #7eb059);
   overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /*********************** 标题部分 ***********************/
@@ -122,8 +137,8 @@ h1 {
   color: #fff;
   font-size: 9.5vw;
   font-weight: 500;
-  margin-top: 13vh;
-  margin-bottom: 3vh;
+  margin-top: 0;
+  margin-bottom: 6vh;
 }
 
 /*********************** 内容部分 ***********************/
@@ -191,7 +206,7 @@ section .button-box {
 footer {
   width: 86vw;
   margin: 0 auto;
-  margin-top: 12vw;
+  margin-top: 8vh;
   font-size: 3.8vw;
   color: #fff;
 }

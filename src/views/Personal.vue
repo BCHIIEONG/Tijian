@@ -24,7 +24,7 @@
               <i class="fa fa-user-plus"></i>
               <p>我的预约</p>
             </div>
-            <div class="right" onclick="location.href='appointmentlist.html'">
+            <div class="right" @click="goToAppointmentList">
               <i class="fa fa-angle-right"></i>
             </div>
           </li>
@@ -39,26 +39,26 @@
           </li>
           <li>
             <div class="left">
-              <i class="fa fa-bed"></i>
-              <p>我的医生</p>
+              <i class="fa fa-file-text-o"></i>
+              <p>健康档案</p>
             </div>
-            <div class="right">
+            <div class="right" @click="goToReportList">
               <i class="fa fa-angle-right"></i>
             </div>
           </li>
           <li>
             <div class="left">
-              <i class="fa fa-sticky-note"></i>
-              <p>问诊订单</p>
+              <i class="fa fa-calendar"></i>
+              <p>立即预约</p>
             </div>
-            <div class="right">
+            <div class="right" @click="goToAppointment">
               <i class="fa fa-angle-right"></i>
             </div>
           </li>
           <li>
             <div class="left">
-              <i class="fa fa-cart-plus"></i>
-              <p>商城订单</p>
+              <i class="fa fa-cog"></i>
+              <p>设置</p>
             </div>
             <div class="right">
               <i class="fa fa-angle-right"></i>
@@ -89,7 +89,7 @@
   export default {
     setup() {
       const router = useRouter();
-      const userData = getSessionStorage("userlingnan") || {
+      const userData = JSON.parse(sessionStorage.getItem("jinandaxueuser") || "{}") || {
         realName: "用户名",
         userId: "请先登录"
       };
@@ -103,14 +103,29 @@
       }
   
       function loginOut() {
-        removeSessionStorage("userlingnan");
+        sessionStorage.removeItem("jinandaxueuser");
         router.push('/');
+      }
+
+      function goToAppointmentList() {
+        router.push('/appointmentlist');
+      }
+
+      function goToReportList() {
+        router.push('/reportlist');
+      }
+
+      function goToAppointment() {
+        router.push('/appointment');
       }
   
       return {
         ...toRefs(state),
         goBack,
-        loginOut
+        loginOut,
+        goToAppointmentList,
+        goToReportList,
+        goToAppointment
       };
     },
     components: {

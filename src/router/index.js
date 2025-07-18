@@ -8,6 +8,11 @@ import SelectDateView from '@/views/SelectDateView.vue'
 import ConfirmOrderView from '@/views/ConfirmOrderView.vue'
 import Personal from '@/views/Personal.vue'
 import AppointmentSuccessView from '@/views/AppointmentSuccessView.vue'
+import RegisterView from '@/views/RegisterView.vue'
+import AppointmentListView from '@/views/AppointmentListView.vue'
+import ReportListView from '@/views/ReportListView.vue'
+import ReportView from '@/views/ReportView.vue'
+import AppointmentCancelView from '@/views/AppointmentCancelView.vue'
 
 
 const router = createRouter({
@@ -51,6 +56,26 @@ const router = createRouter({
       path:'/appointmentsuccess',
       name:'appointmentsuccess',
       component:AppointmentSuccessView
+    },{
+      path:'/register',
+      name:'register',
+      component:RegisterView
+    },{
+      path:'/appointmentlist',
+      name:'appointmentlist',
+      component:AppointmentListView
+    },{
+      path:'/reportlist',
+      name:'reportlist',
+      component:ReportListView
+    },{
+      path:'/report',
+      name:'report',
+      component:ReportView
+    },{
+      path:'/appointment-cancel',
+      name:'appointment-cancel',
+      component:AppointmentCancelView
     }
   ],
 })

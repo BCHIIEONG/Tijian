@@ -150,9 +150,18 @@ export default {
         .then((response) => {
           console.log(response.data);
           if (response.data.code === 1) {
-            // 订单保存成功，调用支付宝支付
-            const orderId = response.data.data.orderId;
-            const paymentUrl = `/api/alipay/pay?subject=${encodeURIComponent(state.setmeal.name)}&traceNo=${orderId}&totalAmount=${state.setmeal.price}`;
+            // 订单保存成功，保存预约信息到sessionStorage
+            const orderInfo = {
+              orderId: response.data.data.orderId,
+              setmealName: state.setmeal.name,
+              price: state.setmeal.price,
+              date: state.selectedDay,
+              hospitalName: state.hospital.name
+            };
+            sessionStorage.setItem('appointmentInfo', JSON.stringify(orderInfo));
+            
+            // 调用支付宝支付
+            const paymentUrl = `/api/alipay/pay?subject=${encodeURIComponent(state.setmeal.name)}&traceNo=${response.data.data.orderId}&totalAmount=${state.setmeal.price}`;
             window.open(paymentUrl, "_self");
           } else {
             alert(response.data.desc || "订单创建失败");
