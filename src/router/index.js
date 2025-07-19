@@ -65,7 +65,7 @@ const router = createRouter({
       name:'appointmentlist',
       component:AppointmentListView
     },{
-      path:'/reportlist',
+      path:'/reportlist.html',
       name:'reportlist',
       component:ReportListView
     },{
