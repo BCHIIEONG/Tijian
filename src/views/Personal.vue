@@ -112,7 +112,7 @@
       }
 
       function goToReportList() {
-        router.push('/reportlist');
+        router.push('/reportlist.html');
       }
 
       function goToAppointment() {

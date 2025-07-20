@@ -107,7 +107,7 @@ export default {
     }
 
     function viewOrders() {
-      router.push('/personal');
+      router.push('/appointmentlist');
     }
 
     function continueBooking() {

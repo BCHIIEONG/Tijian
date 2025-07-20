@@ -14,8 +14,11 @@
           <p>{{ appointment.setmealName || '体检套餐' }}</p>
           <p class="price">￥{{ appointment.price || '0' }}</p>
         </div>
-        <div class="right" v-if="appointment.state === 1" @click="cancelAppointment(appointment)">
+        <div class="right" v-if="appointment.state === 1 && canCancelAppointment(appointment)" @click="cancelAppointment(appointment)">
           取消预约
+        </div>
+        <div class="right disabled" v-else-if="appointment.state === 1 && !canCancelAppointment(appointment)">
+          不可取消
         </div>
         <div class="right completed" v-else-if="appointment.state === 2">
           已完成
@@ -72,8 +75,30 @@ export default {
       // 从sessionStorage获取预约列表
       const savedAppointments = JSON.parse(sessionStorage.getItem('appointmentList') || '[]');
       
+      // 过滤当前用户的预约并更新过期预约状态
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // 设置为今天的00:00:00
+      
+      const updatedAppointments = savedAppointments.map(appointment => {
+        if (appointment.userId === userInfo.userId) {
+          const appointmentDate = new Date(appointment.orderDate);
+          appointmentDate.setHours(0, 0, 0, 0);
+          
+          // 如果预约日期已过期且状态为1（待就诊），自动更新为2（已完成）
+          if (appointmentDate < today && appointment.state === 1) {
+            return { ...appointment, state: 2 };
+          }
+        }
+        return appointment;
+      });
+      
+      // 保存更新后的预约列表
+      if (JSON.stringify(updatedAppointments) !== JSON.stringify(savedAppointments)) {
+        sessionStorage.setItem('appointmentList', JSON.stringify(updatedAppointments));
+      }
+      
       // 过滤当前用户的预约
-      const userAppointments = savedAppointments.filter(appointment => 
+      const userAppointments = updatedAppointments.filter(appointment => 
         appointment.userId === userInfo.userId
       );
       
@@ -100,6 +125,20 @@ export default {
       if (!date) return '';
       const d = new Date(date);
       return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
+    }
+
+    function canCancelAppointment(appointment) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const appointmentDate = new Date(appointment.orderDate);
+      appointmentDate.setHours(0, 0, 0, 0);
+      
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      // 预约日期必须是明天之后才能取消（即今天和明天都不能取消）
+      return appointmentDate > tomorrow;
     }
 
     function goBack() {
@@ -140,7 +179,8 @@ export default {
       viewDetail,
       cancelAppointment,
       goToAppointment,
-      formatDate
+      formatDate,
+      canCancelAppointment
     };
   },
 };
@@ -255,6 +295,12 @@ ul li .right.completed {
 ul li .right.cancelled {
   color: #F56C6C;
   border-color: #F56C6C;
+}
+
+ul li .right.disabled {
+  color: #C0C4CC;
+  border-color: #C0C4CC;
+  cursor: not-allowed;
 }
 
 /*********************** 空状态 ***********************/

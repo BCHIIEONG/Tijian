@@ -63,7 +63,7 @@ export default {
     }
 
     const viewOrders = () => {
-      router.push('/appointment-list')
+      router.push('/appointmentlist')
     }
 
     const continueBooking = () => {
