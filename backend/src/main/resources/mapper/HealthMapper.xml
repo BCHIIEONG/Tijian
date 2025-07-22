@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jida.tijian.mapper.HealthMapper" >
+  <resultMap id="BaseResultMap" type="com.jida.tijian.domain.Health" >
+    <id column="healthId" property="healthId" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="editor" property="editor" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jida.tijian.domain.Health" extends="BaseResultMap" >
+    <result column="image" property="image" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    healthId, title, time, source, content, editor
+  </sql>
+  <sql id="Blob_Column_List" >
+    image
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from health
+    where healthId = #{healthId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from health
+    where healthId = #{healthId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.jida.tijian.domain.Health" >
+    insert into health (healthId, title, time,
+                        source, content, editor,
+                        image)
+    values (#{healthId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{time,jdbcType=VARCHAR},
+            #{source,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{editor,jdbcType=VARCHAR},
+            #{image,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.jida.tijian.domain.Health" >
+    insert into health
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="healthId != null" >
+        healthId,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="editor != null" >
+        editor,
+      </if>
+      <if test="image != null" >
+        image,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="healthId != null" >
+        #{healthId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="editor != null" >
+        #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null" >
+        #{image,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.jida.tijian.domain.Health" >
+    update health
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="editor != null" >
+        editor = #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null" >
+        image = #{image,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where healthId = #{healthId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.jida.tijian.domain.Health" >
+    update health
+    set title = #{title,jdbcType=VARCHAR},
+        time = #{time,jdbcType=VARCHAR},
+        source = #{source,jdbcType=VARCHAR},
+        content = #{content,jdbcType=VARCHAR},
+        editor = #{editor,jdbcType=VARCHAR},
+        image = #{image,jdbcType=LONGVARCHAR}
+    where healthId = #{healthId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.jida.tijian.domain.Health" >
+    update health
+    set title = #{title,jdbcType=VARCHAR},
+        time = #{time,jdbcType=VARCHAR},
+        source = #{source,jdbcType=VARCHAR},
+        content = #{content,jdbcType=VARCHAR},
+        editor = #{editor,jdbcType=VARCHAR}
+    where healthId = #{healthId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAll" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from health
+  </select>
+</mapper>

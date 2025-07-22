@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jida.tijian.mapper.ExamineMapper" >
+  <resultMap id="BaseResultMap" type="com.jida.tijian.domain.Examine" >
+    <id column="examineId" property="examineId" jdbcType="INTEGER" />
+    <result column="examineName" property="examineName" jdbcType="VARCHAR" />
+    <result column="projectId" property="projectId" jdbcType="INTEGER" />
+    <result column="examineDepartment" property="examineDepartment" jdbcType="VARCHAR" />
+    <result column="abbreviation" property="abbreviation" jdbcType="VARCHAR" />
+    <result column="Common_names" property="common_names" jdbcType="LONGVARCHAR" />
+    <result column="examineObjective" property="examineObjective" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    examineId, examineName, projectId, examineDepartment, abbreviation, Common_names,
+    examineObjective
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from examine
+    where examineId = #{examineId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from examine
+    where examineId = #{examineId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jida.tijian.domain.Examine" >
+    insert into examine (examineId, examineName, projectId,
+                         examineDepartment, abbreviation, Common_names,
+                         examineObjective)
+    values (#{examineId,jdbcType=INTEGER}, #{examineName,jdbcType=VARCHAR}, #{projectId,jdbcType=INTEGER},
+            #{examineDepartment,jdbcType=VARCHAR}, #{abbreviation,jdbcType=VARCHAR}, #{common_names,jdbcType=LONGVARCHAR},
+            #{examineObjective,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jida.tijian.domain.Examine" >
+    insert into examine
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="examineId != null" >
+        examineId,
+      </if>
+      <if test="examineName != null" >
+        examineName,
+      </if>
+      <if test="projectId != null" >
+        projectId,
+      </if>
+      <if test="examineDepartment != null" >
+        examineDepartment,
+      </if>
+      <if test="abbreviation != null" >
+        abbreviation,
+      </if>
+      <if test="common_names != null" >
+        Common_names,
+      </if>
+      <if test="examineObjective != null" >
+        examineObjective,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="examineId != null" >
+        #{examineId,jdbcType=INTEGER},
+      </if>
+      <if test="examineName != null" >
+        #{examineName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="examineDepartment != null" >
+        #{examineDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="abbreviation != null" >
+        #{abbreviation,jdbcType=VARCHAR},
+      </if>
+      <if test="common_names != null" >
+        #{common_names,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="examineObjective != null" >
+        #{examineObjective,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jida.tijian.domain.Examine" >
+    update examine
+    <set >
+      <if test="examineName != null" >
+        examineName = #{examineName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        projectId = #{projectId,jdbcType=INTEGER},
+      </if>
+      <if test="examineDepartment != null" >
+        examineDepartment = #{examineDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="abbreviation != null" >
+        abbreviation = #{abbreviation,jdbcType=VARCHAR},
+      </if>
+      <if test="common_names != null" >
+        Common_names = #{common_names,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="examineObjective != null" >
+        examineObjective = #{examineObjective,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where examineId = #{examineId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jida.tijian.domain.Examine" >
+    update examine
+    set examineName = #{examineName,jdbcType=VARCHAR},
+        projectId = #{projectId,jdbcType=INTEGER},
+        examineDepartment = #{examineDepartment,jdbcType=VARCHAR},
+        abbreviation = #{abbreviation,jdbcType=VARCHAR},
+        Common_names = #{common_names,jdbcType=LONGVARCHAR},
+        examineObjective = #{examineObjective,jdbcType=LONGVARCHAR}
+    where examineId = #{examineId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByprojectId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from examine
+    where projectId = #{projectId,jdbcType=INTEGER}
+  </select>
+</mapper>

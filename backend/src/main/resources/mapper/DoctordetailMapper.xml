@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jida.tijian.mapper.DoctordetailMapper" >
+  <resultMap id="BaseResultMap" type="com.jida.tijian.domain.Doctordetail" >
+    <id column="doctorId" property="doctorId" jdbcType="INTEGER" />
+    <result column="doctorName" property="doctorName" jdbcType="VARCHAR" />
+    <result column="doctorLevel" property="doctorLevel" jdbcType="VARCHAR" />
+    <result column="doctorDepartment" property="doctorDepartment" jdbcType="VARCHAR" />
+    <result column="doctorHospital" property="doctorHospital" jdbcType="VARCHAR" />
+    <result column="doctorExcel" property="doctorExcel" jdbcType="VARCHAR" />
+    <result column="doctorSynopsis" property="doctorSynopsis" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jida.tijian.domain.Doctordetail" extends="BaseResultMap" >
+    <result column="doctorPicture" property="doctorPicture" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    doctorId, doctorName, doctorLevel, doctorDepartment, doctorHospital, doctorExcel, 
+    doctorSynopsis
+  </sql>
+  <sql id="Blob_Column_List" >
+    doctorPicture
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from doctordetail
+    where doctorId = #{doctorId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from doctordetail
+    where doctorId = #{doctorId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jida.tijian.domain.Doctordetail" >
+    insert into doctordetail (doctorId, doctorName, doctorLevel, 
+      doctorDepartment, doctorHospital, doctorExcel, 
+      doctorSynopsis, doctorPicture)
+    values (#{doctorId,jdbcType=INTEGER}, #{doctorName,jdbcType=VARCHAR}, #{doctorLevel,jdbcType=VARCHAR}, 
+      #{doctorDepartment,jdbcType=VARCHAR}, #{doctorHospital,jdbcType=VARCHAR}, #{doctorExcel,jdbcType=VARCHAR}, 
+      #{doctorSynopsis,jdbcType=VARCHAR}, #{doctorPicture,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jida.tijian.domain.Doctordetail" >
+    insert into doctordetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="doctorId != null" >
+        doctorId,
+      </if>
+      <if test="doctorName != null" >
+        doctorName,
+      </if>
+      <if test="doctorLevel != null" >
+        doctorLevel,
+      </if>
+      <if test="doctorDepartment != null" >
+        doctorDepartment,
+      </if>
+      <if test="doctorHospital != null" >
+        doctorHospital,
+      </if>
+      <if test="doctorExcel != null" >
+        doctorExcel,
+      </if>
+      <if test="doctorSynopsis != null" >
+        doctorSynopsis,
+      </if>
+      <if test="doctorPicture != null" >
+        doctorPicture,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="doctorId != null" >
+        #{doctorId,jdbcType=INTEGER},
+      </if>
+      <if test="doctorName != null" >
+        #{doctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorLevel != null" >
+        #{doctorLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorDepartment != null" >
+        #{doctorDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorHospital != null" >
+        #{doctorHospital,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorExcel != null" >
+        #{doctorExcel,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorSynopsis != null" >
+        #{doctorSynopsis,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorPicture != null" >
+        #{doctorPicture,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jida.tijian.domain.Doctordetail" >
+    update doctordetail
+    <set >
+      <if test="doctorName != null" >
+        doctorName = #{doctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorLevel != null" >
+        doctorLevel = #{doctorLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorDepartment != null" >
+        doctorDepartment = #{doctorDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorHospital != null" >
+        doctorHospital = #{doctorHospital,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorExcel != null" >
+        doctorExcel = #{doctorExcel,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorSynopsis != null" >
+        doctorSynopsis = #{doctorSynopsis,jdbcType=VARCHAR},
+      </if>
+      <if test="doctorPicture != null" >
+        doctorPicture = #{doctorPicture,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where doctorId = #{doctorId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.jida.tijian.domain.Doctordetail" >
+    update doctordetail
+    set doctorName = #{doctorName,jdbcType=VARCHAR},
+      doctorLevel = #{doctorLevel,jdbcType=VARCHAR},
+      doctorDepartment = #{doctorDepartment,jdbcType=VARCHAR},
+      doctorHospital = #{doctorHospital,jdbcType=VARCHAR},
+      doctorExcel = #{doctorExcel,jdbcType=VARCHAR},
+      doctorSynopsis = #{doctorSynopsis,jdbcType=VARCHAR},
+      doctorPicture = #{doctorPicture,jdbcType=LONGVARCHAR}
+    where doctorId = #{doctorId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jida.tijian.domain.Doctordetail" >
+    update doctordetail
+    set doctorName = #{doctorName,jdbcType=VARCHAR},
+      doctorLevel = #{doctorLevel,jdbcType=VARCHAR},
+      doctorDepartment = #{doctorDepartment,jdbcType=VARCHAR},
+      doctorHospital = #{doctorHospital,jdbcType=VARCHAR},
+      doctorExcel = #{doctorExcel,jdbcType=VARCHAR},
+      doctorSynopsis = #{doctorSynopsis,jdbcType=VARCHAR}
+    where doctorId = #{doctorId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAll" resultType="com.jida.tijian.domain.Doctordetail">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from doctordetail  <!-- 去掉where条件 -->
+  </select>
+</mapper>

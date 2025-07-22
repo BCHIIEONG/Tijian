@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jida.tijian.mapper.PhysicalExaminationMapper" >
+  <resultMap id="BaseResultMap" type="com.jida.tijian.domain.PhysicalExamination" >
+    <id column="projectId" property="projectId" jdbcType="INTEGER" />
+    <result column="projectName" property="projectName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    projectId, projectName
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from physical_examination
+    where projectId = #{projectId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from physical_examination
+    where projectId = #{projectId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jida.tijian.domain.PhysicalExamination" useGeneratedKeys="true" keyProperty="projectId" >
+    insert into physical_examination (projectName)
+    values (#{projectName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jida.tijian.domain.PhysicalExamination" useGeneratedKeys="true" keyProperty="projectId" >
+    insert into physical_examination
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="projectName != null" >
+        projectName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jida.tijian.domain.PhysicalExamination" >
+    update physical_examination
+    <set >
+      <if test="projectName != null" >
+        projectName = #{projectName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where projectId = #{projectId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jida.tijian.domain.PhysicalExamination" >
+    update physical_examination
+    set projectName = #{projectName,jdbcType=VARCHAR}
+    where projectId = #{projectId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAll" resultType="com.jida.tijian.domain.PhysicalExamination">
+    select
+    <include refid="Base_Column_List" />
+    from physical_examination
+  </select>
+</mapper>
