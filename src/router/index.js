@@ -13,10 +13,20 @@ import AppointmentListView from '@/views/AppointmentListView.vue'
 import ReportListView from '@/views/ReportListView.vue'
 import ReportView from '@/views/ReportView.vue'
 import AppointmentCancelView from '@/views/AppointmentCancelView.vue'
+import DoctorDetailView from '@/views/DoctorDetailView.vue'
+import CommonDiseasesView from '@/views/CommonDiseasesView.vue'
+import DiseasesView from '@/views/DiseasesView.vue'
+import FoundView from '@/views/FoundView.vue'
+import FoundContentView from '@/views/FoundContentView.vue'
+import PhysicalExaminationEncyclopediaView from '@/views/PhysicalExaminationEncyclopediaView.vue'
+import ExamineView from '@/views/ExamineView.vue'
+import ExamineDetailView from '@/views/ExamineDetailView.vue'
 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  
+  
   routes: [
     {
       path: '/',
@@ -76,7 +86,39 @@ const router = createRouter({
       path:'/appointment-cancel',
       name:'appointment-cancel',
       component:AppointmentCancelView
-    }
+    },{
+      path:'/doctorDetailView',
+      name:'doctorDetailView',
+      component:DoctorDetailView
+    },{
+      path: '/commonDiseasesView',
+      name: 'commonDiseasesView',
+      component: CommonDiseasesView,
+    },{
+      path: '/diseasesView',
+      name: 'diseasesView',
+      component: DiseasesView,
+    },{
+      path: '/foundView',
+      name: 'foundView',
+      component: FoundView,
+    },{
+      path: '/foundContentView',
+      name: 'foundContentView',
+      component: FoundContentView,
+    },{
+      path: '/physicalExaminationEncyclopediaView',
+      name: 'physicalExaminationEncyclopediaView',
+      component: PhysicalExaminationEncyclopediaView,
+    },{
+      path: '/examineView',
+      name: 'examineView',
+      component: ExamineView,
+    },{
+      path: '/examineDetailView',
+      name: 'examineDetailView',
+      component: ExamineDetailView,
+    },
   ],
 })
 

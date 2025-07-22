@@ -1,30 +1,50 @@
+# Dependencies
+node_modules/
+dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
 # Logs
-logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-.DS_Store
-dist
-dist-ssr
-coverage
-*.local
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-/cypress/videos/
-/cypress/screenshots/
+# Build outputs
+backend/target/
+*.class
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-*.tsbuildinfo
+# Cache
+.cache/
+.vite/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database
+*.db
+*.sqlite
+
+# Personal config files
+alipassword.txt

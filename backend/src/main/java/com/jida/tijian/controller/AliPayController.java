@@ -35,7 +35,7 @@ public class AliPayController {
     private static final String SIGN_TYPE = "RSA2";
 
     @GetMapping("/pay")
-    public void pay(AliPay aliPay, HttpServletResponse httpResponse) throws Exception {
+    public void pay(AliPay aliPay, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws Exception {
         AlipayClient alipayClient = new DefaultAlipayClient(GATEWAY_URL, 
             aliPayConfig.getAppId(),
             aliPayConfig.getAppPrivateKey(), 
@@ -45,7 +45,22 @@ public class AliPayController {
         
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         request.setNotifyUrl(aliPayConfig.getNotifyUrl());
-        request.setReturnUrl("http://localhost:5173/appointmentsuccess");
+        
+        // 动态获取returnUrl
+        String returnDomain = httpRequest.getParameter("returnDomain");
+        String returnUrl;
+        if (returnDomain != null && !returnDomain.isEmpty()) {
+            returnUrl = returnDomain + "/appointmentsuccess";
+        } else {
+            // 从请求头获取origin作为fallback
+            String origin = httpRequest.getHeader("Origin");
+            if (origin != null) {
+                returnUrl = origin + "/appointmentsuccess";
+            } else {
+                returnUrl = "http://localhost:5173/appointmentsuccess"; // 最后的fallback
+            }
+        }
+        request.setReturnUrl(returnUrl);
         request.setBizContent("{\"out_trade_no\":\"" + aliPay.getTraceNo() + "\","
                 + "\"total_amount\":\"" + aliPay.getTotalAmount() + "\","
                 + "\"subject\":\"" + aliPay.getSubject() + "\","

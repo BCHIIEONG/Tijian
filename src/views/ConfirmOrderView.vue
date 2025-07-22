@@ -94,6 +94,7 @@
 import { reactive, toRefs } from "vue";
 import axios from "axios";
 import { useRouter, useRoute } from "vue-router";
+import { generatePaymentUrl } from "@/common.js";
 export default {
   setup() {
 
@@ -161,7 +162,11 @@ export default {
             sessionStorage.setItem('appointmentInfo', JSON.stringify(orderInfo));
             
             // 调用支付宝支付
-            const paymentUrl = `/api/alipay/pay?subject=${encodeURIComponent(state.setmeal.name)}&traceNo=${response.data.data.orderId}&totalAmount=${state.setmeal.price}`;
+            const paymentUrl = generatePaymentUrl({
+              subject: state.setmeal.name,
+              traceNo: response.data.data.orderId,
+              totalAmount: state.setmeal.price
+            });
             window.open(paymentUrl, "_self");
           } else {
             alert(response.data.desc || "订单创建失败");

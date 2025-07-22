@@ -6,11 +6,7 @@
                     <i class="fa fa-home"></i>
                     <p>云医院</p>
                 </li>
-                <li>
-                    <i class="fa fa-opencart"></i>
-                    <p>商城</p>
-                </li>
-                <li>
+                <li @click="toFound">
                     <i class="fa fa-compass"></i>
                     <p>发现</p>
                 </li>
@@ -31,6 +27,10 @@ export default {
         function toIndex() {
             router.push('/index')
         }
+
+        function toFound() {
+            router.push('/foundView')
+        }
         
         function toPersonal() {
             router.push('/personal')
@@ -38,7 +38,8 @@ export default {
         
         return {
             toIndex,
-            toPersonal
+            toPersonal,
+            toFound,
         }
     }
 }
