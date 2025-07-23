@@ -5,4 +5,6 @@ import com.jida.tijian.dto.ResponseObject;
 
 public interface UsersService {
     ResponseObject<Users> login(Users user);
+    ResponseObject<Users> register(Users user);
+    ResponseObject<Boolean> checkUserExist(String userId);
 }

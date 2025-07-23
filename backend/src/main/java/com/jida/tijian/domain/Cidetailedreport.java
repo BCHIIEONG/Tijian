@@ -24,6 +24,9 @@ public class Cidetailedreport {
     private Integer ciId;
 
     private Integer orderId;
+    
+    // 用于type=4的描述型检查项内容
+    private String content;
 
     public Integer getCidrId() {
         return cidrId;
@@ -119,5 +122,13 @@ public class Cidetailedreport {
 
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
+    }
+    
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
     }
 }

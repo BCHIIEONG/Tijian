@@ -19,12 +19,12 @@
           </div>
         </div>
         <ul>
-          <li>
+          <li @click="goToAppointmentList">
             <div class="left">
               <i class="fa fa-user-plus"></i>
               <p>我的预约</p>
             </div>
-            <div class="right" @click="goToAppointmentList">
+            <div class="right">
               <i class="fa fa-angle-right"></i>
             </div>
           </li>
@@ -37,21 +37,21 @@
               <i class="fa fa-angle-right"></i>
             </div>
           </li>
-          <li>
+          <li @click="goToReportList">
             <div class="left">
               <i class="fa fa-file-text-o"></i>
               <p>健康档案</p>
             </div>
-            <div class="right" @click="goToReportList">
+            <div class="right">
               <i class="fa fa-angle-right"></i>
             </div>
           </li>
-          <li>
+          <li @click="goToAppointment">
             <div class="left">
               <i class="fa fa-calendar"></i>
               <p>立即预约</p>
             </div>
-            <div class="right" @click="goToAppointment">
+            <div class="right">
               <i class="fa fa-angle-right"></i>
             </div>
           </li>
@@ -64,12 +64,12 @@
               <i class="fa fa-angle-right"></i>
             </div>
           </li>
-          <li>
+          <li @click="loginOut">
             <div class="left">
               <i class="fa fa-sign-out"></i>
               <p>退出登录</p>
             </div>
-            <div class="right" @click="loginOut">
+            <div class="right">
               <i class="fa fa-angle-right"></i>
             </div>
           </li>
@@ -256,6 +256,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
   }
   section ul li .left {
     display: flex;

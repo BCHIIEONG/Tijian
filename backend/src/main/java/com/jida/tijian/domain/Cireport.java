@@ -1,5 +1,7 @@
 package com.jida.tijian.domain;
 
+import java.util.List;
+
 public class Cireport {
     private Integer cirId;
 
@@ -8,6 +10,9 @@ public class Cireport {
     private String ciName;
 
     private Integer orderId;
+    
+    // 详细检查项列表
+    private List<Cidetailedreport> cidetailedreportList;
 
     public Integer getCirId() {
         return cirId;
@@ -39,5 +44,13 @@ public class Cireport {
 
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
+    }
+    
+    public List<Cidetailedreport> getCidetailedreportList() {
+        return cidetailedreportList;
+    }
+
+    public void setCidetailedreportList(List<Cidetailedreport> cidetailedreportList) {
+        this.cidetailedreportList = cidetailedreportList;
     }
 }

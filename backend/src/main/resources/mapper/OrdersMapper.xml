@@ -9,6 +9,21 @@
     <result column="smId" property="smId" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="INTEGER" />
   </resultMap>
+  
+  <resultMap id="OrdersWithSetmealResultMap" type="com.jida.tijian.domain.Orders" >
+    <id column="orderId" property="orderId" jdbcType="INTEGER" />
+    <result column="orderDate" property="orderDate" jdbcType="DATE" />
+    <result column="userId" property="userId" jdbcType="VARCHAR" />
+    <result column="hpId" property="hpId" jdbcType="INTEGER" />
+    <result column="smId" property="smId" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <association property="setmeal" javaType="com.jida.tijian.domain.Setmeal">
+      <id column="sm_id" property="smId" jdbcType="INTEGER" />
+      <result column="sm_name" property="name" jdbcType="VARCHAR" />
+      <result column="sm_type" property="type" jdbcType="INTEGER" />
+      <result column="sm_price" property="price" jdbcType="INTEGER" />
+    </association>
+  </resultMap>
   <sql id="Base_Column_List" >
     orderId, orderDate, userId, hpId, smId, state
   </sql>
@@ -109,6 +124,25 @@
     <foreach collection="list" item="dto" separator="union">
       select #{dto.date} ymd,count(*) existing from orders where orderDate=#{dto.date} and hpId=#{dto.hpId}
     </foreach>
+  </select>
+
+  <select id="listOrdersByUserIdAndState" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where userId = #{userId,jdbcType=VARCHAR} 
+    and state = #{state,jdbcType=INTEGER}
+    order by orderDate desc
+  </select>
+
+  <select id="listOrdersByUserId" resultMap="OrdersWithSetmealResultMap">
+    select 
+    o.orderId, o.orderDate, o.userId, o.hpId, o.smId, o.state,
+    s.smId as sm_id, s.name as sm_name, s.type as sm_type, s.price as sm_price
+    from orders o
+    left join setmeal s on o.smId = s.smId
+    where o.userId = #{userId,jdbcType=VARCHAR}
+    order by o.orderDate desc
   </select>
 
 </mapper>

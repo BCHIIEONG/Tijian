@@ -11,8 +11,8 @@
       <li v-for="appointment in appointmentList" :key="appointment.orderId">
         <div class="left" @click="viewDetail(appointment)">
           <p>{{ formatDate(appointment.orderDate) }}</p>
-          <p>{{ appointment.setmealName || '体检套餐' }}</p>
-          <p class="price">￥{{ appointment.price || '0' }}</p>
+          <p>{{ appointment.setmeal?.name || '体检套餐' }}</p>
+          <p class="price">￥{{ appointment.setmeal?.price || '0' }}</p>
         </div>
         <div class="right" v-if="appointment.state === 1 && canCancelAppointment(appointment)" @click="cancelAppointment(appointment)">
           取消预约
@@ -45,6 +45,7 @@ import { reactive, toRefs, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import Footer from "@/components/Footer.vue";
+import { formatDateToString, createLocalDate } from "@/utils/dateUtils.js";
 
 export default {
   name: "AppointmentListView",
@@ -72,66 +73,34 @@ export default {
 
       state.loading = true;
       
-      // 从sessionStorage获取预约列表
-      const savedAppointments = JSON.parse(sessionStorage.getItem('appointmentList') || '[]');
-      
-      // 过滤当前用户的预约并更新过期预约状态
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // 设置为今天的00:00:00
-      
-      const updatedAppointments = savedAppointments.map(appointment => {
-        if (appointment.userId === userInfo.userId) {
-          const appointmentDate = new Date(appointment.orderDate);
-          appointmentDate.setHours(0, 0, 0, 0);
-          
-          // 如果预约日期已过期且状态为1（待就诊），自动更新为2（已完成）
-          if (appointmentDate < today && appointment.state === 1) {
-            return { ...appointment, state: 2 };
-          }
-        }
-        return appointment;
-      });
-      
-      // 保存更新后的预约列表
-      if (JSON.stringify(updatedAppointments) !== JSON.stringify(savedAppointments)) {
-        sessionStorage.setItem('appointmentList', JSON.stringify(updatedAppointments));
-      }
-      
-      // 过滤当前用户的预约
-      const userAppointments = updatedAppointments.filter(appointment => 
-        appointment.userId === userInfo.userId
-      );
-      
-      state.appointmentList = userAppointments;
-      state.loading = false;
-      
-      // 实际调用API的代码（当后端准备好时使用）
-      /*
+      // 使用真实API调用
       axios.post('/api/getAppointmentList', {
         userId: userInfo.userId
       }).then(response => {
-        if (response.data.code === 1) {
-          state.appointmentList = response.data.data;
+        if (response.data.status === 200 || response.data.code === 1) {
+          state.appointmentList = response.data.data || [];
+        } else {
+          console.error('获取预约列表失败:', response.data.desc);
+          state.appointmentList = [];
         }
       }).catch(error => {
         console.error('获取预约列表失败:', error);
+        state.appointmentList = [];
       }).finally(() => {
         state.loading = false;
       });
-      */
     }
 
     function formatDate(date) {
-      if (!date) return '';
-      const d = new Date(date);
-      return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
+      return formatDateToString(date);
     }
 
     function canCancelAppointment(appointment) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
-      const appointmentDate = new Date(appointment.orderDate);
+      // 使用工具函数创建本地日期，避免时区问题
+      const appointmentDate = createLocalDate(appointment.orderDate);
       appointmentDate.setHours(0, 0, 0, 0);
       
       const tomorrow = new Date(today);

@@ -79,4 +79,12 @@
       orderId = #{orderId,jdbcType=INTEGER}
     where orId = #{orId,jdbcType=INTEGER}
   </update>
+
+  <select id="listByOrderId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from overallresult
+    where orderId = #{orderId,jdbcType=INTEGER}
+    order by orId
+  </select>
 </mapper>

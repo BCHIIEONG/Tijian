@@ -139,125 +139,47 @@ export default {
     function loadData() {
       state.loading = true;
       
-      // 模拟数据
-      const mockOverallResult = [
-        {
-          orId: 1,
-          title: "心血管系统",
-          content: "心电图显示窦性心律，心率正常，未见明显异常。建议保持健康生活方式，定期复查。"
-        },
-        {
-          orId: 2,
-          title: "消化系统",
-          content: "胃镜检查显示轻度胃炎，建议清淡饮食，避免刺激性食物，按时服药。"
-        }
-      ];
-
-      const mockReportData = [
-        {
-          cirId: 1,
-          ciName: "血常规",
-          cidetailedreportList: [
-            {
-              cidrId: 1,
-              name: "白细胞计数",
-              value: "6.5",
-              unit: "×10^9/L",
-              normalValueString: "3.5-9.5",
-              isError: 0,
-              type: 1
-            },
-            {
-              cidrId: 2,
-              name: "血红蛋白",
-              value: "150",
-              unit: "g/L",
-              normalValueString: "120-175",
-              isError: 0,
-              type: 1
-            }
-          ]
-        },
-        {
-          cirId: 2,
-          ciName: "生化检查",
-          cidetailedreportList: [
-            {
-              cidrId: 3,
-              name: "血糖",
-              value: "7.2",
-              unit: "mmol/L",
-              normalValueString: "3.9-6.1",
-              isError: 1,
-              type: 1
-            },
-            {
-              cidrId: 4,
-              name: "肝功能检查",
-              value: "",
-              unit: "",
-              normalValueString: "",
-              isError: 0,
-              type: 4,
-              content: "肝功能各项指标正常，肝脏形态结构未见异常。"
-            }
-          ]
-        }
-      ];
-
-      // 实际API调用应该是这样的：
-      /*
+      // 使用真实API调用
       Promise.all([
         axios.post("/api/listOverallResult", {
-          userId: state.users.userId,
-          orderId: state.orderId
+          orderId: parseInt(state.orderId)
         }),
         axios.post("/api/listReport", {
-          userId: state.users.userId,
-          orderId: state.orderId
+          orderId: parseInt(state.orderId)
         })
       ]).then(([overallResponse, reportResponse]) => {
-        if (overallResponse.data.code === 1) {
-          state.overallResultArr = overallResponse.data.data;
+        if (overallResponse.data.status === 200 || overallResponse.data.code === 1) {
+          state.overallResultArr = overallResponse.data.data || [];
+        } else {
+          console.error("获取总检结论失败:", overallResponse.data.desc);
+          state.overallResultArr = [];
         }
-        if (reportResponse.data.code === 1) {
-          state.reportArr = reportResponse.data.data;
+        
+        if (reportResponse.data.status === 200 || reportResponse.data.code === 1) {
+          state.reportArr = reportResponse.data.data || [];
           // 筛选异常项
           state.errorReportArr = [];
           for (let i = 0; i < state.reportArr.length; i++) {
-            let cidetailList = state.reportArr[i].cidetailedreportList;
+            let cidetailList = state.reportArr[i].cidetailedreportList || [];
             for (let j = 0; j < cidetailList.length; j++) {
               if (cidetailList[j].isError == 1) {
                 state.errorReportArr.push(cidetailList[j]);
               }
             }
           }
+        } else {
+          console.error("获取体检报告失败:", reportResponse.data.desc);
+          state.reportArr = [];
+          state.errorReportArr = [];
         }
       }).catch(error => {
         console.error("获取体检报告失败:", error);
+        state.overallResultArr = [];
+        state.reportArr = [];
+        state.errorReportArr = [];
       }).finally(() => {
         state.loading = false;
       });
-      */
-
-      // 使用模拟数据
-      setTimeout(() => {
-        state.overallResultArr = mockOverallResult;
-        state.reportArr = mockReportData;
-        
-        // 筛选异常项
-        state.errorReportArr = [];
-        for (let i = 0; i < state.reportArr.length; i++) {
-          let cidetailList = state.reportArr[i].cidetailedreportList;
-          for (let j = 0; j < cidetailList.length; j++) {
-            if (cidetailList[j].isError == 1) {
-              state.errorReportArr.push(cidetailList[j]);
-            }
-          }
-        }
-        
-        state.loading = false;
-      }, 800);
     }
 
     function show(val) {

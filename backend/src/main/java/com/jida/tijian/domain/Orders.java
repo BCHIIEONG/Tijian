@@ -1,10 +1,12 @@
 package com.jida.tijian.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 public class Orders {
     private Integer orderId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Shanghai")
     private Date orderDate;
 
     private String userId;
@@ -14,6 +16,12 @@ public class Orders {
     private Integer smId;
 
     private Integer state;
+    
+    // 临时字段，用于存储用户姓名，不映射到数据库
+    private String name;
+    
+    // 关联的套餐信息
+    private Setmeal setmeal;
 
     public Integer getOrderId() {
         return orderId;
@@ -61,5 +69,21 @@ public class Orders {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public Setmeal getSetmeal() {
+        return setmeal;
+    }
+
+    public void setSetmeal(Setmeal setmeal) {
+        this.setmeal = setmeal;
     }
 }

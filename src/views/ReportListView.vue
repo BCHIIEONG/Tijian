@@ -36,6 +36,7 @@ import Footer from "@/components/Footer.vue";
 import { reactive, toRefs } from "vue";
 import axios from "axios";
 import {useRouter,useRoute} from 'vue-router';
+import { formatDateToChinese } from "@/utils/dateUtils.js";
 
 export default {
   setup() {
@@ -57,42 +58,33 @@ export default {
     }
 
     function loadOrdersArr() {
-      // 模拟数据 - 实际应该调用后端API
-      const mockData = [
-        {
-          orderId: 1,
-          orderDate: "2024-01-15",
-          name: state.users?.realName || "张三"
-        },
-        {
-          orderId: 2,
-          orderDate: "2023-12-20",
-          name: state.users?.realName || "张三"
-        }
-      ];
-      
-      state.ordersArr = mockData;
-      
-      // 实际API调用代码
-      /*
-      axios
-        .post("/api/listOrdersByUserIdAndState", {
-            userId:state.users.userId,
-            state:2
-        })
-        .then((response) => {
-            state.ordersArr=response.data.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      */
+      // 使用真实API调用
+      if (state.users && state.users.userId) {
+        axios
+          .post("/api/listOrdersByUserIdAndState", {
+              userId: state.users.userId,
+              state: 2
+          })
+          .then((response) => {
+              if (response.data.status === 200 || response.data.code === 1) {
+                state.ordersArr = response.data.data || [];
+              } else {
+                console.error("获取体检报告失败:", response.data.desc);
+                state.ordersArr = [];
+              }
+          })
+          .catch((error) => {
+            console.error("获取体检报告错误:", error);
+            state.ordersArr = [];
+          });
+      } else {
+        // 如果没有用户信息，显示空数据
+        state.ordersArr = [];
+      }
     }
 
     function convertStr(str){
-        //2024-12-23
-        let arr=str.split('-');   //[2024,12,23]
-        return arr[0]+"年"+arr[1]+"月"+arr[2].substring(0,2)+"日";
+        return formatDateToChinese(str);
     }
 
     function toReport(orderId){

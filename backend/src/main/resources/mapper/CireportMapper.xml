@@ -7,6 +7,27 @@
     <result column="ciName" property="ciName" jdbcType="VARCHAR" />
     <result column="orderId" property="orderId" jdbcType="INTEGER" />
   </resultMap>
+  
+  <resultMap id="CireportWithDetailsResultMap" type="com.jida.tijian.domain.Cireport" >
+    <id column="cirId" property="cirId" jdbcType="INTEGER" />
+    <result column="ciId" property="ciId" jdbcType="INTEGER" />
+    <result column="ciName" property="ciName" jdbcType="VARCHAR" />
+    <result column="orderId" property="orderId" jdbcType="INTEGER" />
+    <collection property="cidetailedreportList" ofType="com.jida.tijian.domain.Cidetailedreport">
+      <id column="cidrId" property="cidrId" jdbcType="INTEGER" />
+      <result column="name" property="name" jdbcType="VARCHAR" />
+      <result column="unit" property="unit" jdbcType="VARCHAR" />
+      <result column="minrange" property="minrange" jdbcType="DOUBLE" />
+      <result column="maxrange" property="maxrange" jdbcType="DOUBLE" />
+      <result column="normalValue" property="normalValue" jdbcType="VARCHAR" />
+      <result column="normalValueString" property="normalValueString" jdbcType="VARCHAR" />
+      <result column="type" property="type" jdbcType="INTEGER" />
+      <result column="value" property="value" jdbcType="VARCHAR" />
+      <result column="isError" property="isError" jdbcType="INTEGER" />
+      <result column="detail_ciId" property="ciId" jdbcType="INTEGER" />
+      <result column="detail_orderId" property="orderId" jdbcType="INTEGER" />
+    </collection>
+  </resultMap>
   <sql id="Base_Column_List" >
     cirId, ciId, ciName, orderId
   </sql>
@@ -79,4 +100,16 @@
       orderId = #{orderId,jdbcType=INTEGER}
     where cirId = #{cirId,jdbcType=INTEGER}
   </update>
+
+  <select id="listByOrderId" resultMap="CireportWithDetailsResultMap">
+    select 
+    c.cirId, c.ciId, c.ciName, c.orderId,
+    cd.cidrId, cd.name, cd.unit, cd.minrange, cd.maxrange, cd.normalValue, 
+    cd.normalValueString, cd.type, cd.value, cd.isError, 
+    cd.ciId as detail_ciId, cd.orderId as detail_orderId
+    from cireport c
+    left join cidetailedreport cd on c.ciId = cd.ciId and c.orderId = cd.orderId
+    where c.orderId = #{orderId,jdbcType=INTEGER}
+    order by c.cirId, cd.cidrId
+  </select>
 </mapper>
